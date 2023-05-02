@@ -1,32 +1,28 @@
 const GifEncoder = require('gif-encoder-2');
-const { writeFile } = require('fs');
+const { writeFile } = require('fs/promises');
 
-function createHashLipsGiffer(canvas, ctx, fileName, repeat, quality, delay) {
-	const gifEncoder = new GifEncoder(canvas.width, canvas.height);
-	gifEncoder.setQuality(quality);
-	gifEncoder.setRepeat(repeat);
-	gifEncoder.setDelay(delay);
+function createGif(_canvas, _ctx, _fileName, _repeat, _quality, _delay) {
+	const gifEncoder = new GifEncoder(_canvas.width, _canvas.height);
+	gifEncoder.setQuality(_quality);
+	gifEncoder.setRepeat(_repeat);
+	gifEncoder.setDelay(_delay);
 
-	const start = () => {
-		gifEncoder.start();
-	};
-
-	const add = () => {
-		gifEncoder.addFrame(ctx);
-	};
-
-	const stop = () => {
-		gifEncoder.finish();
-		const buffer = gifEncoder.out.getData();
-		writeFile(fileName, buffer, (error) => {});
-		console.log(`Created gif at ${fileName}`);
-	};
+	async function stop() {
+		try {
+			gifEncoder.finish();
+			const buffer = gifEncoder.out.getData();
+			await writeFile(_fileName, buffer);
+			console.log(`Created gif at ${_fileName}`);
+		} catch (error) {
+			console.error(`Error creating gif: ${error}`);
+		}
+	}
 
 	return {
-		start,
-		add,
+		start: () => gifEncoder.start(),
+		add: () => gifEncoder.addFrame(_ctx),
 		stop,
 	};
 }
 
-module.exports = createHashLipsGiffer;
+module.exports = createGif;
