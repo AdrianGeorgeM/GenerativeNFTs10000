@@ -259,8 +259,9 @@ const filterDNAOptions = (_dna) => {
  * @param {String} _dna The entire newDNA string
  * @returns Cleaned DNA string without querystring parameters.
  */
+
 const removeQueryStrings = (_dna) => {
-	const query = /(\?.*$)/;
+	const query = /\?.*/;
 	return _dna.replace(query, '');
 };
 
