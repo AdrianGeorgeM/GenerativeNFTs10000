@@ -270,26 +270,23 @@ const isDnaUnique = (_DnaList = new Set(), _dna = '') => {
 };
 
 const createDna = (_layers) => {
-	let randNum = [];
-	_layers.forEach((layer) => {
-		var totalWeight = 0;
-		layer.elements.forEach((element) => {
+	const randNum = [];
+	for (const layer of _layers) {
+		let totalWeight = 0;
+		for (const element of layer.elements) {
 			totalWeight += element.weight;
-		});
-		// number between 0 - totalWeight
+		}
 		let random = Math.floor(Math.random() * totalWeight);
-		for (var i = 0; i < layer.elements.length; i++) {
-			// subtract the current weight from the random weight until we reach a sub zero value.
-			random -= layer.elements[i].weight;
+		for (const element of layer.elements) {
+			random -= element.weight;
 			if (random < 0) {
-				return randNum.push(
-					`${layer.elements[i].id}:${layer.elements[i].filename}${
-						layer.bypassDNA ? '?bypassDNA=true' : ''
-					}`
+				randNum.push(
+					`${element.id}:${element.filename}${layer.bypassDNA ? '?bypassDNA=true' : ''}`
 				);
+				break;
 			}
 		}
-	});
+	}
 	return randNum.join(DNA_DELIMITER);
 };
 
