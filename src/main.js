@@ -234,19 +234,29 @@ const constructLayerToDna = (_dna = '', _layers = []) => {
  */
 const filterDNAOptions = (_dna) => {
 	const dnaItems = _dna.split(DNA_DELIMITER);
-	const filteredDNA = dnaItems.filter((element) => {
-		const query = /(\?.*$)/;
-		const querystring = query.exec(element);
-		if (!querystring) {
-			return true;
-		}
-		const options = querystring[1].split('&').reduce((r, setting) => {
-			const keyPairs = setting.split('=');
-			return { ...r, [keyPairs[0]]: keyPairs[1] };
-		}, []);
+	const filteredDNA = [];
 
-		return options.bypassDNA;
-	});
+	for (let i = 0; i < dnaItems.length; i++) {
+		const element = dnaItems[i];
+		const queryIndex = element.indexOf('?');
+
+		if (queryIndex === -1) {
+			filteredDNA.push(element);
+		} else {
+			const options = element
+				.slice(queryIndex + 1)
+				.split('&')
+				.reduce((r, setting) => {
+					const keyPairs = setting.split('=');
+					r[keyPairs[0]] = keyPairs[1];
+					return r;
+				}, {});
+
+			if (!options.bypassDNA) {
+				filteredDNA.push(element.slice(0, queryIndex));
+			}
+		}
+	}
 
 	return filteredDNA.join(DNA_DELIMITER);
 };
