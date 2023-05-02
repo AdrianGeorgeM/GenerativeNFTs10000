@@ -264,9 +264,9 @@ const removeQueryStrings = (_dna) => {
 	return _dna.replace(query, '');
 };
 
-const isDnaUnique = (_DnaList = new Set(), _dna = '') => {
-	const _filteredDNA = filterDNAOptions(_dna);
-	return !_DnaList.has(_filteredDNA);
+const isDnaUnique = (DnaList, dna) => {
+	const filteredDNA = filterDNAOptions(dna);
+	return !DnaList.has(filteredDNA);
 };
 
 const createDna = (_layers) => {
