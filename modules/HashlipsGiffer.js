@@ -1,38 +1,31 @@
-const GifEncoder = require("gif-encoder-2");
-const { writeFile } = require("fs");
+const GifEncoder = require('gif-encoder-2');
+const { writeFile } = require('fs/promises');
 
-class HashLipsGiffer {
-  constructor(_canvas, _ctx, _fileName, _repeat, _quality, _delay) {
-    this.canvas = _canvas;
-    this.ctx = _ctx;
-    this.fileName = _fileName;
-    this.repeat = _repeat;
-    this.quality = _quality;
-    this.delay = _delay;
-    this.initGifEncoder();
-  }
+function createGif({ width, height }, ctx, fileName, repeat, quality, delay) {
+	const gifEncoder = new GifEncoder(width, height);
+	gifEncoder.setQuality(quality);
+	gifEncoder.setRepeat(repeat);
+	gifEncoder.setDelay(delay);
 
-  initGifEncoder = () => {
-    this.gifEncoder = new GifEncoder(this.canvas.width, this.canvas.height);
-    this.gifEncoder.setQuality(this.quality);
-    this.gifEncoder.setRepeat(this.repeat);
-    this.gifEncoder.setDelay(this.delay);
-  };
+	const start = () => gifEncoder.start();
+	const add = () => gifEncoder.addFrame(ctx);
 
-  start = () => {
-    this.gifEncoder.start();
-  };
+	async function stop() {
+		try {
+			gifEncoder.finish();
+			const buffer = gifEncoder.out.getData();
+			await writeFile(fileName, buffer);
+			console.log(`Created gif at ${fileName}`);
+		} catch (error) {
+			console.error(`Error creating gif: ${error}`);
+		}
+	}
 
-  add = () => {
-    this.gifEncoder.addFrame(this.ctx);
-  };
-
-  stop = () => {
-    this.gifEncoder.finish();
-    const buffer = this.gifEncoder.out.getData();
-    writeFile(this.fileName, buffer, (error) => {});
-    console.log(`Created gif at ${this.fileName}`);
-  };
+	return {
+		start,
+		add,
+		stop,
+	};
 }
 
-module.exports = HashLipsGiffer;
+module.exports = createGif;
