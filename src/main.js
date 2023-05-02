@@ -238,18 +238,20 @@ const filterDNAOptions = (_dna) => {
 
 	for (let i = 0; i < dnaItems.length; i++) {
 		const element = dnaItems[i];
-		const queryIndex = element.indexOf('?');
+		const queryIndex = element.indexOf('?'); // Check for query string in DNA
 
+		// No query string, add to filteredDNA
 		if (queryIndex === -1) {
 			filteredDNA.push(element);
 		} else {
-			const options = element
-				.slice(queryIndex + 1)
-				.split('&')
+			const options = element // Parse query string into object for options check
+				.slice(queryIndex + 1) // Remove everything before the ? in the query string
+				.split('&') // Split into key/value pairs for each option setting
 				.reduce((r, setting) => {
-					const keyPairs = setting.split('=');
-					r[keyPairs[0]] = keyPairs[1];
-					return r;
+					// Reduce into object of key/value pairs for each option setting
+					const keyPairs = setting.split('='); // Split into key/value pairs for each option setting (again)
+					r[keyPairs[0]] = keyPairs[1]; // Add key/value pair to object
+					return r; // Return object for next iteration of reduce or for end of reduce
 				}, {});
 
 			if (!options.bypassDNA) {
