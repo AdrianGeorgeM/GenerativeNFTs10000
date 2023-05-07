@@ -1,5 +1,7 @@
 # GenerativeNFTs10000
-
+Hey there! I'm a blockchain enthusiast.
+ I'm passionate about creating software that is both useful and fun to use. I'm also a big fan of generative art and I love creating unique and visually appealing art pieces using code.
+ 
 GenerativeNFTs10000 is a repository that contains code for generating 10,000 unique and diverse Non-Fungible Tokens (NFTs) or Artworks using the Canvas API and Node.js.
 This project utilizes generative art techniques to create visually appealing and distinct NFTs by randomly combining various elements such as colors, shapes, patterns, and textures.
 
